@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Critical Goods Index Data</title>
+    <style>
+        body {
+            font-family: monospace;
+            padding: 20px;
+            white-space: pre;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+    </style>
+</head>
+<body>
+    <div id="content"></div>
+    <script>
+        fetch('criticalgoodsindex.csv')
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById('content').textContent = data;
+            });
+    </script>
+</body>
+</html>
