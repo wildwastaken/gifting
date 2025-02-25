@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Whiskers & Brews Cat Cafe</title>
+    <title>Allen's Cat Cafe</title>
     <style>
         * {
             margin: 0;
@@ -34,7 +34,7 @@
             position: relative;
             overflow: hidden;
             padding: 30px;
-            padding-bottom: 120px; /* Extra padding to ensure cats have room at bottom */
+            padding-bottom: 120px;
         }
         
         .music-player {
@@ -58,7 +58,6 @@
             transform: scale(1.2);
         }
         
-        /* CSS-only modal styling using :target selector */
         .cat-info-modal {
             position: fixed;
             top: 0;
@@ -75,7 +74,6 @@
             transition: opacity 0.3s ease;
         }
         
-        /* Show modal when targeted via URL fragment */
         .cat-info-modal:target {
             opacity: 1;
             visibility: visible;
@@ -154,12 +152,10 @@
             animation: moveRandom 20s infinite alternate ease-in-out;
             max-width: 110px;
             z-index: 10;
-            /* Add safety containment with CSS */
             transform-origin: center;
             transition: 0.3s ease-out;
         }
         
-        /* Create containers for each cat to limit their movement area */
         .cat-container {
             position: relative;
             display: inline-block;
