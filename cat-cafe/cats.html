@@ -3,43 +3,201 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cats</title>
+    <title>Whiskers & Brews Cat Cafe</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Georgia', serif;
+        }
+        
+        body {
+            background-color: #f9f5e7;
+            min-height: 100vh;
+            color: #5a3921;
+            overflow-x: hidden;
+        }
+        
+        header {
+            background-color: #7c5e48;
+            color: white;
+            padding: 15px 0;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+        
+        .cafe-backdrop {
+            width: 100%;
+            min-height: 100vh;
+            background-color: #f5e6ca;
+            position: relative;
+            overflow: hidden;
+            padding: 20px;
+        }
+        
+        .music-player {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            width: 300px;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+        
+        .moving-cat {
+            position: absolute;
+            cursor: pointer;
+            transition: transform 0.2s;
+            width: 100px;
+        }
+        
+        .moving-cat:hover {
+            transform: scale(1.2);
+        }
+        
+        .cat-info-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 100;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .modal-content {
+            background-color: #f9f5e7;
+            padding: 30px;
+            border-radius: 10px;
+            max-width: 500px;
+            width: 80%;
+            position: relative;
+            text-align: center;
+        }
+        
+        .close-modal {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            font-size: 24px;
+            cursor: pointer;
+        }
+        
+        .cat-profile-img {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 20px;
+            border: 5px solid #a87e58;
+        }
+        
+        .home-link {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background-color: #7c5e48;
+            color: white;
+            padding: 8px 15px;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+        
+        .home-link:hover {
+            background-color: #5a3921;
+        }
+        
+        .cat-emojis {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            background-color: rgba(255, 255, 255, 0.7);
+            padding: 10px;
+            border-radius: 10px;
+        }
+        
+        .cat-emojis span {
+            font-size: 30px;
+            margin: 0 5px;
+        }
+        
+        @keyframes moveRandom {
+            0% { transform: translate(0, 0); }
+            25% { transform: translate(100px, -50px); }
+            50% { transform: translate(-50px, 100px); }
+            75% { transform: translate(-100px, -30px); }
+            100% { transform: translate(50px, 50px); }
+        }
+
+        .animated-cat {
+            position: absolute;
+            animation: moveRandom 10s infinite alternate ease-in-out;
+        }
+    </style>
 </head>
 <body>
-    <div>
-        <iframe style="border-radius:12px" src="https://open.spotify.com/embed/track/06Ln0yPNanbJjIkJk0oB4E?utm_source=generator" width="100%" height="352" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+    <header>
+        <h1>Welcome to Whiskers & Brews Cat Cafe</h1>
+    </header>
+    
+    <div class="cafe-backdrop">
+        <a href="index.html" class="home-link">Return Home</a>
+        
+        <div class="music-player">
+            <iframe style="border-radius:12px" src="https://open.spotify.com/embed/track/06Ln0yPNanbJjIkJk0oB4E?utm_source=generator" width="100%" height="80" frameBorder="0" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"></iframe>
+        </div>
+        
+        <div class="cat-emojis">
+            <span>😺</span><span>😸</span><span>😹</span><span>😻</span><span>😼</span>
+        </div>
+        
+        <!-- Animated Cats -->
+        <img src="cats/cat1.gif" alt="Whiskers" class="moving-cat animated-cat" style="top: 150px; left: 50px; animation-delay: 0s;" onclick="showCatInfo('Whiskers', '3 years old', 'Whiskers is a playful tabby who loves to chase toys and cuddle on your lap.', 'cats/cat1.gif')">
+        
+        <img src="cats/cat2.gif" alt="Mittens" class="moving-cat animated-cat" style="top: 250px; right: 50px; animation-delay: 1s;" onclick="showCatInfo('Mittens', '2 years old', 'Mittens is a dapper tuxedo cat with white paws.', 'cats/cat2.gif')">
+        
+        <img src="cats/cat3.gif" alt="Oliver" class="moving-cat animated-cat" style="top: 350px; left: 150px; animation-delay: 2s;" onclick="showCatInfo('Oliver', '4 years old', 'Oliver is a big orange sweetheart who loves attention.', 'cats/cat3.gif')">
+        
+        <img src="cats/cat4.gif" alt="Luna" class="moving-cat animated-cat" style="top: 450px; right: 100px; animation-delay: 3s;" onclick="showCatInfo('Luna', '1 year old', 'Luna is a sleek black cat with golden eyes.', 'cats/cat4.gif')">
     </div>
-    <!-- Cat Emojis -->
-    <div>
-        😺 😸 😹 😻 😼 😽 🙀 😿 😾
+    
+    <div class="cat-info-modal" id="catModal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal()">&times;</span>
+            <img id="catImage" src="" alt="Cat" class="cat-profile-img">
+            <h2 id="catName"></h2>
+            <p id="catAge"></p>
+            <p id="catDescription"></p>
+        </div>
     </div>
-    <!-- ASCII Art Cats -->
-    <pre>
-        /\_/\  
-       ( o.o ) 
-        > ^ <
-    </pre>
-    <pre>
-        /\     /\
-       {  `---'  }
-       {  O   O  }
-       ~~>  V  <~~
-        \ \|/ /
-         `-----'____
-         /     \    \_
-        {       }\  )_\_   _
-        |  \_/  ) / / /  / \
-         \__/  /(_/(_/  \_/ 
-    </pre>
-    <marquee>
-        <pre>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log("Cats page loaded successfully");
+        });
 
-                       /)
-              /\___/\ ((
-              \`@_@'/  ))
-              {_:Y:.}_//
---------------{_}^-'{_}----------
-        </pre>
-    </marquee>
+        function showCatInfo(name, age, description, imageSrc) {
+            document.getElementById('catName').textContent = name;
+            document.getElementById('catAge').textContent = age;
+            document.getElementById('catDescription').textContent = description;
+            document.getElementById('catImage').src = imageSrc; 
+            document.getElementById('catModal').style.display = 'flex';
+        }
+        
+        function closeModal() {
+            document.getElementById('catModal').style.display = 'none';
+        }
+
+        window.onclick = function(event) {
+            if (event.target === document.getElementById('catModal')) {
+                closeModal();
+            }
+        }
+    </script>
 </body>
 </html>
