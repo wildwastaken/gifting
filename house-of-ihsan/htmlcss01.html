@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>House of Ihsan - CSS Variation 1</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, user-scalable=no" />
+    <style>
+      body {
+        margin: 20px;
+        font-family: Arial, sans-serif;
+      }
+      header {
+        text-align: center;
+        background: #eee;
+        padding: 10px;
+      }
+      h1 {
+        text-transform: uppercase;
+        margin: 0;
+      }
+      /* Quick flexbox for the address/hours columns */
+      .info {
+        display: flex;
+        justify-content: space-between;
+      }
+      .info > div {
+        width: 45%;
+        background: #f0f0f0;
+        margin: 5px;
+        padding: 10px;
+      }
+      .menu-section {
+        margin-top: 20px;
+      }
+      .menu-section h2 {
+        text-decoration: underline;
+      }
+      .footer {
+        margin-top: 30px;
+        text-align: center;
+        font-style: italic;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>House of Ihsan</h1>
+    </header>
+
+    <div class="info">
+      <div class="address">
+        <h2>Address</h2>
+        <p>
+          <a href="https://maps.app.goo.gl/ZmBPLdDAU48cNzicA" target="_blank">
+            6 Spring St, Princeton, NJ 08542
+          </a>
+        </p>
+        <p>
+          <a href="http://instagram.com/houseofihsan" target="_blank">Instagram</a><br />
+          <a href="mailto:houseofihsan@gmail.com">houseofihsan@gmail.com</a>
+        </p>
+      </div>
+      <div class="hours">
+        <h2>Hours</h2>
+        <ul>
+          <li>Tue-Thur: 8am-5pm</li>
+          <li>Fri-Sat: 8am-8pm</li>
+          <li>Sun: 8am-4pm</li>
+          <li>Mon: Closed</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="menu-section">
+      <h2>Menu</h2>
+      <ul>
+        <li>Espresso Drinks</li>
+        <li>Pourover Coffee</li>
+        <li>Drip Coffee</li>
+        <li>Tea</li>
+        <li>Retail Beans</li>
+      </ul>
+    </div>
+
+    <div class="footer">
+      <p>
+        House of Ihsan is a boutique café in downtown Princeton, offering premium 
+        coffee, artisanal teas, and halal-certified treats.
+      </p>
+    </div>
+  </body>
+</html>
