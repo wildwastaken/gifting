@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Are you Justin?</title>
+    <style>
+        body {
+            font-family: "Times New Roman", Times, serif;
+            background-color: black;
+            color: white;
+            height: 100vh;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+        
+        .container {
+            max-width: 500px;
+            width: 90%;
+        }
+        
+        p {
+            font-size: 20px;
+            margin-bottom: 20px;
+        }
+        
+        button {
+            background-color: white;
+            color: black;
+            border: none;
+            border-radius: 20px;
+            padding: 8px 16px;
+            margin: 5px;
+            cursor: pointer;
+            font-family: "Times New Roman", Times, serif;
+        }
+        
+        button:hover {
+            background-color: #dddddd;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="step" id="step1">
+            <p>Are you Justin?</p>
+            <button onclick="nextStep('step2')">Yes!</button>
+            <button onclick="nextStep('notJustin')">No...</button>
+        </div>
+        
+        <div class="step" id="notJustin" style="display: none;">
+            <p>Sorry, this site is only for Justin.</p>
+            <button onclick="nextStep('step1')">Retry</button>
+        </div>
+
+        <div class="step" id="step2" style="display: none;">
+            <p>Oh! You are Justin Yang, right?</p>
+            <button onclick="nextStep('step3')">Yes!</button>
+            <button onclick="nextStep('notJustin2')">No...</button>
+        </div>
+        
+        <div class="step" id="notJustin2" style="display: none;">
+            <p>This site is only for Justin Yang.</p>
+            <button onclick="nextStep('step2')">Retry</button>
+        </div>
+        
+        <div class="step" id="step3" style="display: none;">
+            <p>Wow! You are Justin Yang from Oklahoma, right?</p>
+            <button onclick="nextStep('step4')">Yes!</button>
+            <button onclick="nextStep('notJustin3')">No...</button>
+        </div>
+        
+        <div class="step" id="notJustin3" style="display: none;">
+            <p>Hmm... This site is only for Justin Yang from Oklahoma.</p>
+            <button onclick="nextStep('step3')">Retry</button>
+        </div>
+        
+        <div class="step" id="step4" style="display: none;">
+            <p>Great! You are Justin Yang from Oklahoma who loves KBBQ, right?</p>
+            <button onclick="nextStep('step5')">Yes!</button>
+            <button onclick="nextStep('notJustin4')">No...</button>
+        </div>
+        
+        <div class="step" id="notJustin4" style="display: none;">
+            <p>Oops! This site is only for Justin Yang from Oklahoma who loves KBBQ.</p>
+            <button onclick="nextStep('step4')">Retry</button>
+        </div>
+
+        <div class="step" id="step5" style="display: none;">
+            <p>Awesome! And you're the Justin Yang from Oklahoma who loves KBBQ who goes to Princeton University, right?</p>
+            <button onclick="nextStep('step6')">Yes!</button>
+            <button onclick="nextStep('notJustin5')">No...</button>
+        </div>
+        
+        <div class="step" id="notJustin5" style="display: none;">
+            <p>Sorry! This site is only for Justin Yang from Oklahoma who loves KBBQ who goes to Princeton University.</p>
+            <button onclick="nextStep('step5')">Retry</button>
+        </div>
+
+        <div class="step" id="step6" style="display: none;">
+            <p>Perfect! And you're the Justin Yang from Oklahoma who loves KBBQ who goes to Princeton University who has a best friend named Allen, correct?</p>
+            <button onclick="checkBirthday()">Yes!</button>
+            <button onclick="nextStep('notJustin6')">No...</button>
+        </div>
+        
+        <div class="step" id="notJustin6" style="display: none;">
+            <p>Sorry! This site is only for Justin Yang from Oklahoma who loves KBBQ who goes to Princeton University who has a best friend named Allen.</p>
+            <button onclick="nextStep('step6')">Retry</button>
+        </div>
+        
+        <div class="step" id="birthdayQuestion" style="display: none;">
+            <p>Is your birthday on March 6?</p>
+            <button onclick="nextStep('final')">Yes!</button>
+            <button onclick="nextStep('wrongDate')">No...</button>
+        </div>
+        
+        <div class="step" id="wrongDate" style="display: none;">
+            <p>Sorry, Justin! This site only works on your birthday, March 6. Please come back then.</p>
+            <button onclick="nextStep('step1')">Retry</button>
+            <button onclick="nextStep('final')">I want to see it anyway</button>
+        </div>
+
+        <div class="step" id="final" style="display: none;">
+            <p>Happy Birthday, Justin! 🎉</p>
+            <p>Thanks for being my best friend!</p>
+            <p>Here's the secret: <a href="https://www.allenstabs.netlify.app">Click here</a></p>
+        </div>
+    </div>
+    
+    <script>
+        function nextStep(stepId) {
+            document.querySelectorAll('.step').forEach(step => {
+                step.style.display = 'none';
+            });
+            document.getElementById(stepId).style.display = 'block';
+        }
+
+        function checkBirthday() {
+            let today = new Date();
+            if (today.getMonth() === 2 && today.getDate() === 6) {
+                nextStep('birthdayQuestion');
+            } else {
+                nextStep('wrongDate');
+            }
+        }
+    </script>
+</body>
+</html>
