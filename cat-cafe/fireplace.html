@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Cozy Fireplace</title>
+  <style>
+    body {
+      background-color: #f9f5e7;
+      font-family: "Georgia", serif;
+      color: #5a3921;
+      text-align: center;
+      margin: 0;
+      padding: 2em;
+    }
+    h1 {
+      margin-bottom: 1em;
+    }
+    .video-container {
+      margin: 0 auto;
+      width: 560px;
+      height: 315px;
+    }
+    .video-container iframe {
+      width: 560px;
+      height: 315px;
+      border: none;
+    }
+    .study-break-container {
+      margin-top: 2em;
+    }
+    #friendName {
+      padding: 0.5em;
+      font-size: 1em;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    #studyBreakBtn {
+      cursor: pointer;
+      border: none;
+      padding: 0.6em 1.2em;
+      font-size: 1.1em;
+      background-color: #7c5e48;
+      color: #fff;
+      border-radius: 8px;
+      transition: 0.2s;
+      margin-left: 0.5em;
+    }
+    #studyBreakBtn:hover {
+      background-color: #5a3921;
+    }
+    #studyBreakCount {
+      margin-top: 1em;
+      font-size: 1.1em;
+      font-weight: bold;
+    }
+    #voteList {
+      list-style-type: none;
+      padding: 0;
+      margin-top: 1em;
+    }
+    #voteList li {
+      margin: 0.3em 0;
+    }
+    .home-link {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background-color: #7c5e48;
+      color: white;
+      padding: 10px 18px;
+      text-decoration: none;
+      border-radius: 8px;
+      font-weight: bold;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .home-link:before {
+      content: '🏠';
+    }
+    .home-link:hover {
+      background-color: #5a3921;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    }
+  </style>
+</head>
+<body>
+  <a href="index.html" class="home-link">Return Home</a>
+  <h1>Cozy Fireplace</h1>
+  <p>Enjoy the ambiance!</p>
+  
+  <div class="video-container">
+    <iframe
+      src="https://www.youtube.com/embed/L_LUpnjgPso"
+      title="Cozy Fireplace Video"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen"
+    ></iframe>
+  </div>
+
+  <div class="study-break-container">
+    <input type="text" id="friendName" placeholder="Your name" />
+    <button id="studyBreakBtn">Request a Study Break</button>
+    <div id="studyBreakCount"></div>
+    <ul id="voteList"></ul>
+  </div>
+
+  <script>
+    let voteList = JSON.parse(localStorage.getItem("voteList")) || [];
+    function updateDisplay() {
+      document.getElementById("studyBreakCount").textContent = voteList.length + " people want a study break!";
+      let ul = document.getElementById("voteList");
+      ul.innerHTML = "";
+      voteList.forEach(function(name) {
+        let li = document.createElement("li");
+        li.textContent = name;
+        ul.appendChild(li);
+      });
+    }
+    updateDisplay();
+    document.getElementById("studyBreakBtn").addEventListener("click", function() {
+      let friendName = document.getElementById("friendName").value.trim();
+      if (friendName) {
+        voteList.push(friendName);
+        localStorage.setItem("voteList", JSON.stringify(voteList));
+        updateDisplay();
+        document.getElementById("friendName").value = "";
+      }
+    });
+  </script>
+</body>
+</html>

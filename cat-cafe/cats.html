@@ -37,6 +37,25 @@
             padding-bottom: 120px;
         }
         
+        /* Fireplace Link */
+        .fireplace-link {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            display: inline-block;
+            transition: transform 0.3s ease;
+            z-index: 999;
+        }
+        .fireplace-link img {
+            width: 80px;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+        .fireplace-link:hover {
+            transform: scale(1.1);
+        }
+
         .music-player {
             position: absolute;
             bottom: 20px;
@@ -172,13 +191,18 @@
 <body>
 
     <div class="cafe-backdrop">
+
+        <a href="fireplace.html" class="fireplace-link">
+            <img src="fireplace.gif" alt="Open Fireplace">
+        </a>
+
         <a href="index.html" class="home-link">Return Home</a>
         
         <div class="music-player">
-            <iframe style="border-radius:12px" src="https://open.spotify.com/embed/track/06Ln0yPNanbJjIkJk0oB4E?utm_source=generator" width="100%" height="80" frameBorder="0" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"></iframe>
+            <iframe style="border-radius:12px" src="https://open.spotify.com/embed/playlist/5fVO4FqAqvsgE2zhqtkFSv?utm_source=generator" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
         </div>
         
-        <!-- Animated Cats with links to their info modals -->
+        <!-- Animated Cats -->
         <a href="#elijah-info">
             <img src="cats/cat1.gif" alt="Elijah" class="moving-cat animated-cat" style="top: 20%; left: 15%; animation-delay: 0s;">
         </a>
@@ -196,7 +220,7 @@
         </a>
     </div>
     
-    <!-- Cat info modals using :target CSS selector -->
+    <!-- Cat Info Modals -->
     <div class="cat-info-modal" id="elijah-info">
         <div class="modal-content">
             <a href="#" class="close-modal">&times;</a>
@@ -232,7 +256,7 @@
             <a href="#" class="close-modal">&times;</a>
             <img src="cats/cat4.gif" alt="Justin" class="cat-profile-img">
             <h2>Justin</h2>
-            <p>19 years old</p>
+            <p>20 years old</p>
             <p>Justin is quite entertained by his own paws.</p>
         </div>
     </div>
