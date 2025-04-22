@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Stephanie's Sketchboard</title>
+  <style>
+    :root{--note-size:200px;--header-height:64px}
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:system-ui,sans-serif;background:#F5F5DC;height:100vh;display:flex;flex-direction:column;overflow:hidden}
+    header{height:var(--header-height);display:flex;align-items:center;gap:.6rem;padding:0 .75rem;background:#ffffffe6;border-bottom:1px solid #e2e2e2;backdrop-filter:blur(7px)}
+    h1{font-size:1.1rem;margin-right:auto}
+    button,input[type=color],input[type=range],input[type=number]{font:inherit;border:none;border-radius:4px;padding:.45rem .9rem;cursor:pointer;transition:background .2s}
+    button{background:#333;color:#fff}button:hover{background:#000}
+    input[type=color]{width:2rem;height:2rem;border:1px solid #ccc;padding:0}
+    input[type=number]{width:3.5rem;text-align:center}
+
+    #boardWrapper{flex:1;position:relative;overflow:hidden}
+    /* Paper texture as base64 PNG to keep html2canvas happy */
+    #board{width:100%;height:100%;background:#F5F5DC url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="60" height="60"><circle cx="30" cy="30" r="2" fill="%23e5e5df"/></svg>') center/60px 60px repeat;position:relative}
+
+    .note{width:var(--note-size);height:var(--note-size);position:absolute;border:1px solid rgba(0,0,0,.1);box-shadow:0 6px 12px rgba(0,0,0,.18);background-size:contain;background-position:center;background-repeat:no-repeat;cursor:grab}
+    .note:active{cursor:grabbing;box-shadow:0 3px 6px rgba(0,0,0,.32)}
+
+    /* Eraser cursor ring */
+    #cursorRing{position:fixed;pointer-events:none;border:2px dashed #e63946;border-radius:50%;transform:translate(-50%,-50%);z-index:1200;opacity:0;transition:opacity .1s}
+
+    .modal{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:#0008;z-index:1000}
+    .hidden{display:none!important}
+    #cropContainer{background:#fff;padding:1rem;border-radius:8px;max-width:90vw;max-height:90vh;display:flex;flex-direction:column;gap:.75rem}
+    #cropStage,#editCanvas{max-width:100%;max-height:70vh;border:1px solid #ddd}
+    #controlsRow{display:flex;align-items:center;gap:.5rem;flex-wrap:wrap}
+  </style>
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/cropperjs@1.6.1/dist/cropper.min.css">
+</head>
+<body>
+  <header>
+    <h1>Stephanie's Sketchboard</h1>
+    <input type="file" id="fileInput" accept="image/*" multiple hidden>
+    <button id="addBtn">Add sketch 📄</button>
+    <label style="display:flex;align-items:center;gap:.3rem">Note color <input type="color" id="noteColor" value="#fffbc1"></label>
+    <label style="display:flex;align-items:center;gap:.4rem">Rotate 
+      <input type="range" id="rotateSlider" min="-45" max="45" value="0" step="1">
+      <input type="number" id="rotateValue" min="-45" max="45" value="0">
+    </label>
+    <button id="exportBtn">Export PNG 💾</button>
+  </header>
+  <div id="boardWrapper"><div id="board"></div></div>
+  <div id="cursorRing"></div>
+
+  <!-- Crop / Edit Modal -->
+  <div id="modal" class="modal hidden">
+    <div id="cropContainer">
+      <div id="cropStage"><img id="cropImage"></div>
+      <canvas id="editCanvas" class="hidden"></canvas>
+      <div id="controlsRow">
+        <button id="cancelBtn">Cancel</button>
+        <button id="cropOkBtn">Crop → Remove BG</button>
+        <button id="undoBtn" class="hidden">Undo</button>
+        <label id="tolLabel" class="hidden">Tolerance <input type="range" id="tolSlider" min="0" max="100" value="20"></label>
+        <label id="eraseSizeLabel" class="hidden">Eraser <input type="range" id="eraseSize" min="5" max="120" value="20"></label>
+        <button id="eraseBtn" class="hidden">Free‑erase (Shift)</button>
+        <button id="doneBtn" class="hidden">Done ✅</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/cropperjs@1.6.1/dist/cropper.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+  <script>
+  (function(){
+    const $=id=>document.getElementById(id);
+    const board=$('board');
+    const noteColorInput=$('noteColor');
+    const rotateSlider=$('rotateSlider');
+    const rotateValue=$('rotateValue');
+    const cursorRing=$('cursorRing');
+    let selectedNote=null;
+
+    /* Rotate controls */
+    const syncRot=v=>{rotateSlider.value=v;rotateValue.value=v};
+    rotateSlider.oninput=e=>{const v=e.target.value;applyRotation(v)};
+    rotateValue.oninput=e=>{let v=Math.max(-45,Math.min(45,e.target.value));syncRot(v);applyRotation(v)};
+    function applyRotation(v){if(selectedNote){selectedNote.style.transform=`rotate(${v}deg)`;selectedNote.dataset.rot=v;saveLayout();}}
+    noteColorInput.oninput=()=>{if(selectedNote){selectedNote.style.backgroundColor=noteColorInput.value;selectedNote.dataset.bg=noteColorInput.value;saveLayout();}}
+
+    /* layout persistence */
+    function saveLayout(){localStorage.setItem('layout',JSON.stringify([...document.querySelectorAll('.note')].map(n=>({src:n.dataset.src,x:n.style.left,y:n.style.top,r:n.dataset.rot,color:n.dataset.bg}))))}
+    function loadLayout(){const d=localStorage.getItem('layout');if(d)JSON.parse(d).forEach(o=>createNote(o.src,o.x,o.y,o.r,o.color,true))}
+
+    /* create note */
+    const rndPos=size=>`${Math.max(20,Math.random()*(size-240))}px`;
+    function createNote(src,left=rndPos(innerWidth),top=rndPos(innerHeight),rot=0,color=noteColorInput.value,skipSave=false){
+      const div=document.createElement('div');
+      div.className='note';
+      Object.assign(div.style,{left,top,transform:`rotate(${rot}deg)`,backgroundImage:`url(${src})`,backgroundColor:color});
+      Object.assign(div.dataset,{src,rot,color:bg=color});
+
+      /* drag & select */
+      div.onpointerdown=e=>{if(e.target!==div)return;selectedNote=div;syncRot(div.dataset.rot);noteColorInput.value=div.dataset.bg;div.setPointerCapture(e.pointerId);const offX=e.clientX-parseFloat(div.style.left);const offY=e.clientY-parseFloat(div.style.top);const move=ev=>{div.style.left=`${ev.clientX-offX}px`;div.style.top=`${ev.clientY-offY}px`};const up=()=>{div.releasePointerCapture(e.pointerId);saveLayout();window.removeEventListener('pointermove',move)};window.addEventListener('pointermove',move);window.addEventListener('pointerup',up,{once:true})};
+
+      /* delete on dblclick */
+      div.ondblclick=()=>{board.removeChild(div);if(div===selectedNote)selectedNote=null;saveLayout()};
+
+      board.appendChild(div);if(!skipSave)saveLayout();}
+
+    /* delete via Delete key */
+    window.addEventListener('keydown',e=>{if(e.key==='Delete'&&selectedNote){board.removeChild(selectedNote);selectedNote=null;saveLayout()}});
+
+    /* Modal crop/erase */
+    const modal=$('modal'),cropImage=$('cropImage'),editCanvas=$('editCanvas'),cropOkBtn=$('cropOkBtn'),cancelBtn=$('cancelBtn'),undoBtn=$('undoBtn'),tolSlider=$('tolSlider'),tolLabel=$('tolLabel'),eraseBtn=$('eraseBtn'),eraseSize=$('eraseSize'),eraseSizeLabel=$('eraseSizeLabel'),doneBtn=$('doneBtn');
+    let cropper=null,undoStack=[],erasing=false;
+
+    function showModal(file){const img=new Image();img.onload=()=>{cropImage.src=img.src;modal.classList.remove('hidden');cropImage.classList.remove('hidden');editCanvas.classList.add('hidden');[cropOkBtn].forEach(b=>b.classList.remove('hidden'));[undoBtn,tolLabel,eraseBtn,eraseSizeLabel,doneBtn].forEach(b=>b.classList.add('hidden'));cropper&&cropper.destroy();cropper=new Cropper(cropImage,{viewMode:1,dragMode:'crop',autoCropArea:1,background:false})};img.src=URL.createObjectURL(file)}
+
+    cropOkBtn.onclick=()=>{const canvas=cropper.getCroppedCanvas({width:400,height:400,imageSmoothingQuality:'high'});cropper.destroy();undoStack=[canvas.getContext('2d').getImageData(0,0,canvas.width,canvas.height)];cropImage.classList.add('hidden');editCanvas.classList.remove('hidden');editCanvas.width=canvas.width;editCanvas.height=canvas.height;editCanvas.getContext('2d').putImageData(undoStack[0],0,0);[cropOkBtn].forEach(b=>b.classList.add('hidden'));[undoBtn,tolLabel,eraseBtn,eraseSizeLabel,doneBtn].forEach(b=>b.classList.remove('hidden'))};
+
+    /* BG erase with cursor ring */
+    const dist=(r1,g1,b1,r2,g2,b2)=>Math.hypot(r1-r2,g1-g2,b1-b2);
+    function removeBg(x,y){const ctx=editCanvas.getContext('2d');const img=ctx.getImageData(0,0,editCanvas.width,editCanvas.height);const d=img.data;const idx=(Math.floor(y)*img.width+Math.floor(x))*4;const tgt=[d[idx],d[idx+1],d[idx+2]];const tol=+tolSlider.value;undoStack.push(img);if(undoStack.length>20)undoStack.shift();for(let i=0;i<d.length;i+=4){if(dist(d[i],d[i+1],d[i+2],...tgt)<=tol)d[i+3]=0}ctx.putImageData(img,0,0)}
+
+    function updateRing(x,y){cursorRing.style.left=`${x}px`;cursorRing.style.top=`${y}px`;cursorRing.style.width=`${eraseSize.value}px`;cursorRing.style.height=`${eraseSize.value}px`}
+
+    editCanvas.onpointermove=e=>{const rect=editCanvas.getBoundingClientRect();updateRing(e.clientX,e.clientY)};
+    editCanvas.onpointerenter=()=>{cursorRing.style.opacity=.9};
+    editCanvas.onpointerleave=()=>{cursorRing.style.opacity=0};
+    eraseSize.oninput=()=>{cursorRing.style.width=`${eraseSize.value}px`;cursorRing.style.height=`${eraseSize.value}px`};
+
+    editCanvas.onpointerdown=e=>{const rect=editCanvas.getBoundingClientRect();const x=(e.clientX-rect.left)*editCanvas.width/rect.width;const y=(e.clientY-rect.top)*editCanvas.height/rect.height;const ctx=editCanvas.getContext('2d');if(e.shiftKey||erasing){ctx.globalCompositeOperation='destination-out';ctx.lineWidth=+eraseSize.value;ctx.lineCap='round';ctx.beginPath();ctx.moveTo(x,y);const mv=ev=>{updateRing(ev.clientX,ev.clientY);const nx=(ev.clientX-rect.left)*editCanvas.width/rect.width;const ny=(ev.clientY-rect.top)*editCanvas.height/rect.height;ctx.lineTo(nx,ny);ctx.stroke()};const up=()=>{ctx.globalCompositeOperation='source-over';window.removeEventListener('pointermove',mv)};window.addEventListener('pointermove',mv);window.addEventListener('pointerup',up,{once:true})}else removeBg(x,y)};
+
+    undoBtn.onclick=()=>{if(undoStack.length>1){undoStack.pop();editCanvas.getContext('2d').putImageData(undoStack[undoStack.length-1],0,0)}};
+    eraseBtn.onpointerdown=()=>{erasing=true;eraseBtn.textContent='Erasing…'};
+    eraseBtn.onpointerup=()=>{erasing=false;eraseBtn.textContent='Free‑erase (Shift)'};
+
+    doneBtn.onclick=()=>{const url=editCanvas.toDataURL('image/png');modal.classList.add('hidden');cursorRing.style.opacity=0;createNote(url)};
+    cancelBtn.onclick=()=>{modal.classList.add('hidden');cursorRing.style.opacity=0;cropper&&cropper.destroy()};
+
+    /* file + export */
+    $('addBtn').onclick=()=>$('fileInput').click();$('fileInput').onchange=e=>{const [f]=e.target.files;if(f)showModal(f);e.target.value=''};
+    $('exportBtn').onclick=()=>{html2canvas(board,{backgroundColor:'#F5F5DC',useCORS:true}).then(c=>{const a=document.createElement('a');a.download='sketchboard.png';a.href=c.toDataURL();a.click()})};
+
+    loadLayout();
+  })();
+  </script>
+</body>
+</html>
