@@ -1,0 +1,53 @@
+Title: test10
+
+----
+
+Page-content: 
+
+----
+
+References: 
+
+----
+
+Color: #840f0f
+
+----
+
+Cover-image-url: https://attachments.are.na/35807628/f27bdc8c5d61366caa771268d0b4a440.mov?1744000382
+
+----
+
+Date: 2025-04-07 04:43:00
+
+----
+
+Updated: 
+
+----
+
+Show-title: false
+
+----
+
+Hide-dates: false
+
+----
+
+Hide-color-card: false
+
+----
+
+Hide-tags: false
+
+----
+
+Tags: 
+
+----
+
+Related: 
+
+----
+
+Uuid: xWIq4zhbilNa55Ww

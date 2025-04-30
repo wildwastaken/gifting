@@ -1,0 +1,49 @@
+Page-content: 
+
+----
+
+References: 
+
+----
+
+Color: #593434
+
+----
+
+Cover-image-url: https://attachments.are.na/35807635/c2878af62151e34631945b53b71f0dc9.mov?1744000384
+
+----
+
+Date: 2025-04-07 00:40:00
+
+----
+
+Updated: 
+
+----
+
+Show-title: false
+
+----
+
+Hide-dates: false
+
+----
+
+Hide-color-card: false
+
+----
+
+Hide-tags: false
+
+----
+
+Tags: 
+
+----
+
+Related: 
+
+----
+
+Uuid: YsYZgopucrRe841o

@@ -1,0 +1,49 @@
+Page-content: sdsd
+
+----
+
+References: 
+
+----
+
+Color: #5b3d3d
+
+----
+
+Cover-image-url: https://attachments.are.na/35807630/f594caa2d92a39fa7e74c53de4923d50.mov?1744000383
+
+----
+
+Date: 2025-04-07 00:42:00
+
+----
+
+Updated: 
+
+----
+
+Show-title: false
+
+----
+
+Hide-dates: false
+
+----
+
+Hide-color-card: false
+
+----
+
+Hide-tags: false
+
+----
+
+Tags: 
+
+----
+
+Related: 
+
+----
+
+Uuid: 4xtv7XUmoFq6YtQ9

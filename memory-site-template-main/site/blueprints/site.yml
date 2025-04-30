@@ -1,0 +1,49 @@
+title: Site
+
+columns:
+  - width: 2/3
+    sections:
+      pages:
+        headline: Site
+        type: pages
+        templates: 
+          - posts
+          # - home
+          # - tags
+        max: 1
+        sortable: true
+        image:
+          icon: ""
+          back: "{{ page.children.listed.sort('date', 'desc').first.color.toColor().html }}"
+      
+      staticSiteGenerator:
+        type: fields
+        fields:     
+          shelf:
+            query: site.index.children.sortBy("date", "desc").filterBy("template", "post").listed
+            label: Shelf
+            type: pages
+            layout: cards
+            size: small
+            image:
+              cover: true
+              ratio: 3/2
+              icon: ""
+              back: "{{ page.color.toColor().html }}"
+    
+  - width: 1/3
+    sections:
+      deployment:
+        type: fields
+        fields:
+          staticSiteGenerator:
+            label: Generate a static version of the site
+            type: staticSiteGenerator
+          first_name:
+            label: First name
+            type: text
+            placeholder: "Elliott"
+          email:
+            label: Email
+            type: text
+            placeholder: "sun@memory.computer"

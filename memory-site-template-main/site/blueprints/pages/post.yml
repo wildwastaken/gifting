@@ -1,0 +1,98 @@
+title: Post
+
+options:
+  changeSlug: true
+  changeStatus: true
+  delete: true
+
+columns:
+  main:
+    width: 2/3
+    sections:
+      content:
+        type: fields
+        fields:
+          page_content:
+            label: Content
+            type: textarea
+            size: large
+            buttons:
+              - headlines
+              - bold
+              - italic
+              - strikethrough
+              - link
+              - email
+              - file
+              - list
+              - code
+          references:
+            label: References
+            type: textarea
+            size: small
+
+  sidebar:
+    width: 1/3
+    sections:
+      meta:
+        type: fields
+        fields:
+          staticSiteGenerator:
+            label: Generate a static version of the site
+            type: staticSiteGenerator
+          color:
+            label: Color
+            type: color
+            alpha: true
+            required: true # Ensure color is always set
+          cover_image_url:
+            label: Cover Image or Video URL
+            type: url
+            help: Enter the URL for the cover image or video
+          date:
+            label: Publication Date
+            type: date
+            time:
+              step:
+                unit: minute
+                size: 1
+            required: true
+            default: now
+          updated:
+            label: Updated
+            type: date
+            time:
+              step:
+                unit: minute
+                size: 1
+            required: false # Optional field for updates
+          show_title:
+            label: Show title
+            type: toggle
+            default: false
+          hide_dates:
+            label: Hide dates
+            type: toggle
+            default: false
+          hide_color_card:
+            label: Hide color card
+            type: toggle
+            default: false
+          hide_tags:
+            label: Hide tags
+            type: toggle
+            default: false
+          tags:
+            label: Tags
+            type: tags
+      
+          related:
+              type: pages
+              label: Related Posts
+              parent: site.find('posts')
+              template: post
+              query: site.find('posts')
+              text: "{{ page.title }}"
+              info: "{{ page.date.toDate('Y-m-d') }}"
+              empty: No related posts found
+              sortBy: date desc
